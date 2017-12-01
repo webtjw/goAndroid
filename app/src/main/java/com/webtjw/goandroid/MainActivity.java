@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.webtjw.goandroid.utils.Logcat;
+import com.webtjw.goandroid.utils.RouteHandle;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         makeFullscreen();
         setContentView(R.layout.activity_main);
 
-
+        RouteHandle.addActivity(this);
         recoverFromDeath(savedInstanceState);
         setResultBack();
         setShowDialog();
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RouteHandle.removeActivity(this);
     }
 
     @Override

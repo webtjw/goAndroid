@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.webtjw.goandroid.utils.Logcat;
+import com.webtjw.goandroid.utils.RouteHandle;
 
 public class SecondActivity extends AppCompatActivity {
     static final String TAG = "AppCompatActivity";
@@ -16,6 +17,7 @@ public class SecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+        RouteHandle.addActivity(this);
         getMsgFromIntent(getIntent());
 
         TextView text = (TextView) findViewById(R.id.sample_second);
@@ -28,6 +30,17 @@ public class SecondActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RouteHandle.removeActivity(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        RouteHandle.removeAll();
     }
 
     private void getMsgFromIntent (Intent intent) {
