@@ -2,6 +2,7 @@ package com.webtjw.goandroid;
 
 import android.content.Intent;
 import android.nfc.Tag;
+import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         makeFullscreen();
         setContentView(R.layout.activity_main);
 
+
+        recoverFromDeath(savedInstanceState);
         setResultBack();
         setShowDialog();
     }
@@ -64,19 +67,22 @@ public class MainActivity extends AppCompatActivity {
         if (data != null) Logcat.w(TAG, "" + requestCode + " " + resultCode + " " + data.getStringExtra("returnData"));
     }
 
-    public void setShowDialog () {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setIcon(R.drawable.ic_launcher_background);
-        // 设置Title的内容
-        builder.setTitle("弹出警告框");
-        // 设置Content来显示一个信息
-        builder.setMessage("确定删除吗？");
+    // 可以在活动被系统回收后，保存回收前的数据，以便活动回复时，在 onCreate 里面重新读取数据
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        String jiawei = "you can save this even if the activity's killed!";
+        outState.putString("data", jiawei);
+    }
 
+    // 显示另外一个类似 Dialog 的活动
+    public void setShowDialog () {
         Button button = (Button) findViewById(R.id.button_dialog);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                builder.show();
+                Intent intent = new Intent(MainActivity.this, DialogActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -99,9 +105,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                // 将 bundle 塞进 intent 里面传送给下一个活动
+                Bundle bundle = new Bundle();
+                bundle.putInt("age", 24);
+                intent.putExtra("bundle", bundle);
                 startActivityForResult(intent, 1);
             }
         });
+    }
+
+    // 从活动被回收后再恢复数据
+    private void recoverFromDeath (Bundle savedState) {
+        if (savedState != null) {
+            String msg = savedState.getString("data");
+            Logcat.i(TAG, msg);
+        }
     }
 
     // JNI
