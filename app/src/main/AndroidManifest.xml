@@ -20,7 +20,10 @@
         <activity
             android:name=".DialogActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".KillappActivity"></activity>
+        <activity android:name=".KillappActivity" />
+        <activity android:name=".widgets.TextViewActivity" />
+        <activity android:name=".myWidget.TextViewActivity" />
+        <activity android:name=".TextViewActivity"></activity>
     </application>
 
 </manifest>
