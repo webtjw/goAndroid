@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                // 将 bundle 塞进 intent 里面传送给下一个活动
-                Bundle bundle = new Bundle();
-                bundle.putInt("age", 24);
-                intent.putExtra("bundle", bundle);
-                startActivityForResult(intent, 1);
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            // 将 bundle 塞进 intent 里面传送给下一个活动
+            Bundle bundle = new Bundle();
+            bundle.putInt("age", 24);
+            intent.putExtra("bundle", bundle);
+            startActivityForResult(intent, 1);
             }
         });
     }

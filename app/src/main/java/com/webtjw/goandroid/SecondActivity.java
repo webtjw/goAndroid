@@ -24,8 +24,7 @@ public class SecondActivity extends AppCompatActivity {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SecondActivity.this, KillappActivity.class);
-                startActivity(intent);
+                KillappActivity.lauch(SecondActivity.this, "我使用了你的方法来启动你哦！厉害吧");
             }
         });
     }
