@@ -24,10 +24,8 @@ public class SecondActivity extends AppCompatActivity {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.putExtra("returnData", "hello kawi!");
-                setResult(RESULT_OK, intent);
-                finish();
+                Intent intent = new Intent(SecondActivity.this, KillappActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -40,7 +38,10 @@ public class SecondActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        RouteHandle.removeAll();
+        Intent intent = new Intent();
+        intent.putExtra("returnData", "hello kawi!");
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void getMsgFromIntent (Intent intent) {
