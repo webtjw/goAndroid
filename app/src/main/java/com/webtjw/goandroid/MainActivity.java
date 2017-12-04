@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.webtjw.goandroid.receiver.TestReceiver;
 import com.webtjw.goandroid.utils.Logcat;
 import com.webtjw.goandroid.utils.RouteHandle;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setResultBack();
         goVideoView();
         setNetworkSpy();
+        setCustomBroadcast();
     }
 
     @Override
@@ -147,6 +149,24 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(context, "网络变化", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // 设立自定义的广播
+    private void setCustomBroadcast () {
+        // 注册接收器
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.webtjw.goAndroid.testCustomBroadcast");
+        registerReceiver(new TestReceiver(), intentFilter);
+
+        Button button4 = findViewById(R.id.button4);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent("com.webtjw.goAndroid.testCustomBroadcast");
+                sendBroadcast(intent);
+                // sendOrderedBroadcast(); // 发送有序广播，这种是按顺序发送，有可能会被某个 APP 拦截的
+            }
+        });
     }
 
     // JNI

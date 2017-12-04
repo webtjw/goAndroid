@@ -27,4 +27,9 @@
         style="@style/btn_red"
         android:text="VideoView"></Button>
 
+    <Button
+        android:id="@+id/button4"
+        style="@style/btn_red"
+        android:text="发送广播"></Button>
+
 </LinearLayout>
