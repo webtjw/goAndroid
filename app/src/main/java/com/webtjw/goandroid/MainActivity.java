@@ -1,6 +1,9 @@
 package com.webtjw.goandroid;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.nfc.Tag;
 import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         recoverFromDeath(savedInstanceState);
         setResultBack();
         goVideoView();
+        setNetworkSpy();
     }
 
     @Override
@@ -128,6 +132,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    // 注册广播接收器
+    private void setNetworkSpy () {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(new NetworkChangeReceiver(), intentFilter);
+    }
+
+    // 网络改变广播接收器
+    public class NetworkChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Toast.makeText(context, "网络变化", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // JNI
