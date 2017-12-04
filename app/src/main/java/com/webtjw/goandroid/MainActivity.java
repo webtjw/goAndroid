@@ -1,10 +1,13 @@
 package com.webtjw.goandroid;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.nfc.Tag;
+import android.os.IBinder;
 import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         goVideoView();
         setNetworkSpy();
         setCustomBroadcast();
+        startCountService();
     }
 
     @Override
@@ -168,6 +172,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    // 启动计数器 service
+    private void startCountService () {
+        Button button5 = findViewById(R.id.button5);
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CounterService.class);
+                bindService(intent, countServiceConn, BIND_AUTO_CREATE);
+            }
+        });
+
+    }
+
+    // service 和活动间的链接
+    private ServiceConnection countServiceConn = new ServiceConnection () {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            final Button button5 = findViewById(R.id.button5);
+            CounterService service = ((CounterService.MsgBinder) iBinder).getService();
+            service.updateCallback = new UpdateCallback() {
+                @Override
+                public void callback(int count) {
+                    button5.setText(Integer.toString(count));
+                }
+            };
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     // JNI
     static {
