@@ -11,23 +11,20 @@
         style="@style/btn_red"
         android:text="活动被系统回收前，会触发 onSaveInstanceState" />
 
-    <TextView
-        android:id="@+id/sample_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="Hello World!" />
-
-    <Button
-        android:id="@+id/button_dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Dialog" />
-
     <Button
         android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        style="@style/btn_red"
+        android:text="startActivityForResult 启动一个活动，期待后退回本活动时，能获取数据" />
+    <EditText
+        android:id="@+id/to_next_data"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:layout_marginVertical="4dp"
+        android:hint="请输入你想传递的信息，然后按上方按钮"></EditText>
+
+    <Button
+        android:id="@+id/button3"
+        style="@style/btn_red"
+        android:text="VideoView"></Button>
 
 </LinearLayout>

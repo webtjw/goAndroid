@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.webtjw.goandroid.utils.Logcat;
 import com.webtjw.goandroid.utils.RouteHandle;
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         RouteHandle.addActivity(this);
         recoverFromDeath(savedInstanceState);
         setResultBack();
-        setShowDialog();
+        goVideoView();
     }
 
     @Override
@@ -63,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Logcat.i(TAG, "Result back to MainActivity!!!");
-        if (data != null) Logcat.w(TAG, "" + requestCode + " " + resultCode + " " + data.getStringExtra("returnData"));
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (intent != null) {
+            String age = intent.getStringExtra("msg");
+            if (age != "") {
+                Toast.makeText(this, age, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     // 可以在活动被系统回收后，保存回收前的数据，以便活动回复时，在 onCreate 里面重新读取数据
@@ -75,18 +81,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState, outPersistentState);
         String jiawei = "you can save this even if the activity's killed!";
         outState.putString("data", jiawei);
-    }
-
-    // 显示另外一个类似 Dialog 的活动
-    public void setShowDialog () {
-        Button button = (Button) findViewById(R.id.button_dialog);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, DialogActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     // 设置本活动为全屏
@@ -100,16 +94,16 @@ public class MainActivity extends AppCompatActivity {
 
     // 后面一个活动返回数据到前面一个活动
     private void setResultBack () {
-        TextView tv = (TextView) findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        TextView button2 = (TextView) findViewById(R.id.button2);
 
-        tv.setOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+            Intent intent = new Intent(MainActivity.this, ReturnDataActivity.class);
+            EditText editText = (EditText) findViewById(R.id.to_next_data);
             // 将 bundle 塞进 intent 里面传送给下一个活动
             Bundle bundle = new Bundle();
-            bundle.putInt("age", 24);
+            bundle.putString("msg", editText.getText().toString());
             intent.putExtra("bundle", bundle);
             startActivityForResult(intent, 1);
             }
@@ -122,6 +116,18 @@ public class MainActivity extends AppCompatActivity {
             String msg = savedState.getString("data");
             Logcat.i(TAG, msg);
         }
+    }
+
+    // 查看视频 VideoView
+    private void goVideoView () {
+        Button button3 = (Button) findViewById(R.id.button3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, VideoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     // JNI
