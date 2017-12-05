@@ -38,7 +38,9 @@
         <service
             android:name=".CounterService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".ui.Main2Activity"></activity>
     </application>
 
 </manifest>

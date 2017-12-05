@@ -6,28 +6,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.nfc.Tag;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.PersistableBundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.webtjw.goandroid.receiver.TestReceiver;
 import com.webtjw.goandroid.utils.Logcat;
 import com.webtjw.goandroid.utils.RouteHandle;
 
-import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
