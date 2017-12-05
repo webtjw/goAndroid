@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.nfc.Tag;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,14 +27,27 @@ import com.webtjw.goandroid.receiver.TestReceiver;
 import com.webtjw.goandroid.utils.Logcat;
 import com.webtjw.goandroid.utils.RouteHandle;
 
+import java.lang.ref.WeakReference;
+
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
+    private Button button1;
+    private Button button2;
+    private Button button3;
+    private Button button4;
+    private Button button5;
+    public CounterService counterService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeFullscreen();
         setContentView(R.layout.activity_main);
+        button1 = findViewById(R.id.button1);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
+        button4 = findViewById(R.id.button4);
+        button5 = findViewById(R.id.button5);
 
         RouteHandle.addActivity(this);
         recoverFromDeath(savedInstanceState);
@@ -104,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
     // 后面一个活动返回数据到前面一个活动
     private void setResultBack () {
-        TextView button2 = (TextView) findViewById(R.id.button2);
-
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
     // 查看视频 VideoView
     private void goVideoView () {
-        Button button3 = (Button) findViewById(R.id.button3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction("com.webtjw.goAndroid.testCustomBroadcast");
         registerReceiver(new TestReceiver(), intentFilter);
 
-        Button button4 = findViewById(R.id.button4);
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,36 +186,48 @@ public class MainActivity extends AppCompatActivity {
 
     // 启动计数器 service
     private void startCountService () {
-        Button button5 = findViewById(R.id.button5);
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CounterService.class);
-                bindService(intent, countServiceConn, BIND_AUTO_CREATE);
+                if (counterService == null) {
+                    Intent intent = new Intent(MainActivity.this, CounterService.class);
+                    bindService(intent, countServiceConn, BIND_AUTO_CREATE);
+                }
             }
         });
 
     }
 
     // service 和活动间的链接
-    private ServiceConnection countServiceConn = new ServiceConnection () {
+    public ServiceConnection countServiceConn = new ServiceConnection () {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            final Button button5 = findViewById(R.id.button5);
             CounterService service = ((CounterService.MsgBinder) iBinder).getService();
+            counterService = service;
             service.updateCallback = new UpdateCallback() {
                 @Override
-                public void callback(int count) {
-                    button5.setText(Integer.toString(count));
+                public void callback(Message msg) {
+                    counterHandler.sendMessage(msg);
                 }
             };
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-
-        }
+        public void onServiceDisconnected(ComponentName componentName) { }
     };
+
+    // message handler
+    public Handler counterHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            // 防止内存泄漏
+            if (msg.obj != null && counterService != null) {
+                CounterService.CounterMsgObj obj = (CounterService.CounterMsgObj)msg.obj;
+                button5.setText("当前计数是：" + obj.count);
+            }
+            return false;
+        }
+    });
 
     // JNI
     static {
