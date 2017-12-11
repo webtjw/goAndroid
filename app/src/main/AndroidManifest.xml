@@ -40,7 +40,12 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".ui.Main2Activity"></activity>
+        <activity android:name=".ui.Main2Activity" />
+        <activity android:name=".serial.SerialActivity" />
+        <service
+            android:name=".serial.SerialService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

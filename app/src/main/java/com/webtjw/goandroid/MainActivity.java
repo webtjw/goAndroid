@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.webtjw.goandroid.receiver.TestReceiver;
+import com.webtjw.goandroid.serial.SerialActivity;
 import com.webtjw.goandroid.utils.Logcat;
 import com.webtjw.goandroid.utils.RouteHandle;
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button3;
     private Button button4;
     private Button button5;
+    private Button button6;
     public CounterService counterService;
 
     @Override
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         button3 = findViewById(R.id.button3);
         button4 = findViewById(R.id.button4);
         button5 = findViewById(R.id.button5);
+        button6 = findViewById(R.id.button6);
 
         RouteHandle.addActivity(this);
         recoverFromDeath(savedInstanceState);
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setNetworkSpy();
         setCustomBroadcast();
         startCountService();
+        goSerial();
     }
 
     @Override
@@ -223,6 +227,16 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
+
+    private void goSerial() {
+        button6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SerialActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     // JNI
     static {

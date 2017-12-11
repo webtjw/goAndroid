@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.webtjw.goandroid.serial.SerialActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="13dp"
+        android:text="输入数据以发送:"></TextView>
+
+    <EditText
+        android:id="@+id/serial_data_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionDone"></EditText>
+
+    <Button
+        android:id="@+id/serial_data_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/btn_red"
+        android:text="send"></Button>
+
+</LinearLayout>

@@ -5,4 +5,5 @@ package com.webtjw.goandroid.serial;
  */
 
 public class Serialport {
+    public Byte[] dataQueue;
 }

@@ -1,8 +1,16 @@
 package com.webtjw.goandroid.serial;
 
-/**
- * Created by webtj on 2017/12/11.
- */
+public class SerialThread extends Thread {
 
-public class SerialThread {
+    public SerialService service;
+    public SerialService serialport;
+
+    @Override
+    public void run() {
+        super.run();
+
+        while (!isInterrupted()) {
+
+        }
+    }
 }

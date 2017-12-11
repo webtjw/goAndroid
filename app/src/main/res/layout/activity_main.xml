@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.webtjw.goandroid.MainActivity"
     android:orientation="vertical"
-    android:background="#B4B4B4">
+    android:background="#fff">
 
     <Button
         android:id="@+id/button1"
@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="4dp"
         android:hint="请输入你想传递的信息，然后按上方按钮"
-        android:textColor="#FFF"
-        android:textColorHint="#FFF"/>
+        android:textColor="#333"
+        android:textColorHint="#bbb"/>
 
     <Button
         android:id="@+id/button3"
@@ -40,5 +40,10 @@
         android:id="@+id/button5"
         style="@style/btn_red"
         android:text="点击启动服务和它的子线程" />
+
+    <Button
+        android:id="@+id/button6"
+        style="@style/btn_red"
+        android:text="进入模拟串口运行场景" />
 
 </LinearLayout>
