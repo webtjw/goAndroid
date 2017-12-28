@@ -21,9 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".ui.Main2Activity" />
         <activity android:name=".serial.SerialActivity" />
+
         <service
             android:name=".serial.SerialService"
             android:enabled="true"
@@ -31,7 +31,9 @@
         <service
             android:name=".counter.CounterService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+
+        <activity android:name=".html5.WebviewActivity"></activity>
     </application>
 
 </manifest>

@@ -15,16 +15,17 @@ import com.webtjw.goandroid.common.UIInterface;
 
 public class CounterService extends Service {
 
-    CounterThread counterThread;
+    private CounterThread counterThread;
     public UIInterface updateInterface;
+    public boolean isBind = false;
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("CNM", "SB");
         counterThread = new CounterThread();
         counterThread.counterService = CounterService.this;
         counterThread.start();
+        isBind = true;
 
         CounterBinder counterBinder = new CounterBinder();
         return counterBinder;

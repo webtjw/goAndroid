@@ -10,6 +10,7 @@ import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.webtjw.goandroid.common.UIInterface;
 import com.webtjw.goandroid.counter.CounterService;
+import com.webtjw.goandroid.html5.WebviewActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
 
     private Button button1;
+    private Button button2;
 
     private CounterService counterService;
     private ServiceConnection counterServiceConnect;
@@ -35,14 +38,13 @@ public class MainActivity extends AppCompatActivity {
         makeFullscreen();
         setContentView(R.layout.activity_main);
 
-        button1 = findViewById(R.id.button1);
 
         initCounter();
+        initWebview();
     }
 
     @Override
     protected void onDestroy() {
-        unbindService(counterServiceConnect);
         super.onDestroy();
     }
 
@@ -101,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
 
     // 开启计数服务和子线程，同时利用 GoApplication 来 Toast
     private void initCounter() {
-        Intent intent = new Intent(MainActivity.this, CounterService.class);
+        button1 = findViewById(R.id.button1);
+        final Intent intent = new Intent(MainActivity.this, CounterService.class);
 
         counterServiceConnect = new ServiceConnection() {
             @Override
@@ -119,12 +122,15 @@ public class MainActivity extends AppCompatActivity {
             public void onServiceDisconnected(ComponentName componentName) { }
         };
 
-        bindService(intent, counterServiceConnect, Context.BIND_AUTO_CREATE);
-
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.this.unbindService(counterServiceConnect);
+                if (counterService != null && counterService.isBind) {
+                    unbindService(counterServiceConnect);
+                    counterServiceConnect = null;
+                } else {
+                    bindService(intent, counterServiceConnect, Context.BIND_AUTO_CREATE);
+                }
             }
         });
     }
@@ -134,13 +140,22 @@ public class MainActivity extends AppCompatActivity {
         public boolean handleMessage(Message message) {
             if (message.what == 0x01) {
                 int count = message.arg1;
-                String button1Text = button1.getText().toString();
-                button1Text += "当前计数为：" + Integer.toString(count);
-                button1.setText(button1Text);
+                Toast.makeText(GoApplication.getContext(), "当前计数：" + Integer.toString(count), Toast.LENGTH_SHORT).show();
             }
             return false;
         }
     });
+
+    private void initWebview() {
+        button2 = findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, WebviewActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     // JNI
     static {
