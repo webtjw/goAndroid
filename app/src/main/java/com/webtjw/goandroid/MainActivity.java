@@ -1,10 +1,8 @@
 package com.webtjw.goandroid;
 
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
@@ -16,51 +14,36 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.webtjw.goandroid.receiver.TestReceiver;
-import com.webtjw.goandroid.serial.SerialActivity;
-import com.webtjw.goandroid.utils.Logcat;
-import com.webtjw.goandroid.utils.RouteHandle;
+import com.webtjw.goandroid.common.UIInterface;
+import com.webtjw.goandroid.counter.CounterService;
 
 
 public class MainActivity extends AppCompatActivity {
+
     static final String TAG = "MainActivity";
+
     private Button button1;
-    private Button button2;
-    private Button button3;
-    private Button button4;
-    private Button button5;
-    private Button button6;
-    public CounterService counterService;
+
+    private CounterService counterService;
+    private ServiceConnection counterServiceConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         makeFullscreen();
         setContentView(R.layout.activity_main);
-        button1 = findViewById(R.id.button1);
-        button2 = findViewById(R.id.button2);
-        button3 = findViewById(R.id.button3);
-        button4 = findViewById(R.id.button4);
-        button5 = findViewById(R.id.button5);
-        button6 = findViewById(R.id.button6);
 
-        RouteHandle.addActivity(this);
-        recoverFromDeath(savedInstanceState);
-        setResultBack();
-        goVideoView();
-        setNetworkSpy();
-        setCustomBroadcast();
-        startCountService();
-        goSerial();
+        button1 = findViewById(R.id.button1);
+
+        initCounter();
     }
 
     @Override
     protected void onDestroy() {
+        unbindService(counterServiceConnect);
         super.onDestroy();
-        RouteHandle.removeActivity(this);
     }
 
     @Override
@@ -108,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 设置本活动为全屏
-    private void makeFullscreen () {
+    private void makeFullscreen() {
         // 隐藏标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE); // 这个是 Activity 的
         if (getSupportActionBar() != null) getSupportActionBar().hide(); // 这个是 AppCompatActivity
@@ -116,127 +99,48 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
-    // 后面一个活动返回数据到前面一个活动
-    private void setResultBack () {
-        button2.setOnClickListener(new View.OnClickListener() {
+    // 开启计数服务和子线程，同时利用 GoApplication 来 Toast
+    private void initCounter() {
+        Intent intent = new Intent(MainActivity.this, CounterService.class);
+
+        counterServiceConnect = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                counterService = ((CounterService.CounterBinder)iBinder).getService();
+                counterService.setUpdateMethod(new UIInterface() {
+                    @Override
+                    public void updateUI(Message message) {
+                        counterHandler.sendMessage(message);
+                    }
+                });
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) { }
+        };
+
+        bindService(intent, counterServiceConnect, Context.BIND_AUTO_CREATE);
+
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this, ReturnDataActivity.class);
-            EditText editText = (EditText) findViewById(R.id.to_next_data);
-            // 将 bundle 塞进 intent 里面传送给下一个活动
-            Bundle bundle = new Bundle();
-            bundle.putString("msg", editText.getText().toString());
-            intent.putExtra("bundle", bundle);
-            startActivityForResult(intent, 1);
+                MainActivity.this.unbindService(counterServiceConnect);
             }
         });
     }
 
-    // 从活动被回收后再恢复数据
-    private void recoverFromDeath (Bundle savedState) {
-        if (savedState != null) {
-            String msg = savedState.getString("data");
-            Logcat.i(TAG, msg);
-        }
-    }
-
-    // 查看视频 VideoView
-    private void goVideoView () {
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, VideoActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    // 注册广播接收器
-    private void setNetworkSpy () {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(new NetworkChangeReceiver(), intentFilter);
-    }
-
-    // 网络改变广播接收器
-    public class NetworkChangeReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "网络变化", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    // 设立自定义的广播
-    private void setCustomBroadcast () {
-        // 注册接收器
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.webtjw.goAndroid.testCustomBroadcast");
-        registerReceiver(new TestReceiver(), intentFilter);
-
-        button4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent("com.webtjw.goAndroid.testCustomBroadcast");
-                sendBroadcast(intent);
-                // sendOrderedBroadcast(); // 发送有序广播，这种是按顺序发送，有可能会被某个 APP 拦截的
-            }
-        });
-    }
-
-    // 启动计数器 service
-    private void startCountService () {
-        button5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (counterService == null) {
-                    Intent intent = new Intent(MainActivity.this, CounterService.class);
-                    bindService(intent, countServiceConn, BIND_AUTO_CREATE);
-                }
-            }
-        });
-
-    }
-
-    // service 和活动间的链接
-    public ServiceConnection countServiceConn = new ServiceConnection () {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            CounterService service = ((CounterService.MsgBinder) iBinder).getService();
-            counterService = service;
-            service.updateCallback = new UpdateCallback() {
-                @Override
-                public void callback(Message msg) {
-                    counterHandler.sendMessage(msg);
-                }
-            };
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) { }
-    };
-
-    // message handler
     public Handler counterHandler = new Handler(new Handler.Callback() {
         @Override
-        public boolean handleMessage(Message msg) {
-            // 防止内存泄漏
-            if (msg.obj != null && counterService != null) {
-                CounterService.CounterMsgObj obj = (CounterService.CounterMsgObj)msg.obj;
-                button5.setText("当前计数是：" + obj.count);
+        public boolean handleMessage(Message message) {
+            if (message.what == 0x01) {
+                int count = message.arg1;
+                String button1Text = button1.getText().toString();
+                button1Text += "当前计数为：" + Integer.toString(count);
+                button1.setText(button1Text);
             }
             return false;
         }
     });
-
-    private void goSerial() {
-        button6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SerialActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
 
     // JNI
     static {

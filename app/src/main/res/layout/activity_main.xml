@@ -10,40 +10,13 @@
     <Button
         android:id="@+id/button1"
         style="@style/btn_red"
-        android:text="活动被系统回收前，会触发 onSaveInstanceState" />
+        android:text="Service + Thread 计数且基于 Application 类的 Toast" />
 
     <Button
         android:id="@+id/button2"
         style="@style/btn_red"
-        android:text="startActivityForResult 启动一个活动，期待后退回本活动时，能获取数据" />
+        android:text="点击打开 webview" />
 
-    <EditText
-        android:id="@+id/to_next_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="4dp"
-        android:hint="请输入你想传递的信息，然后按上方按钮"
-        android:textColor="#333"
-        android:textColorHint="#bbb"/>
 
-    <Button
-        android:id="@+id/button3"
-        style="@style/btn_red"
-        android:text="VideoView" />
-
-    <Button
-        android:id="@+id/button4"
-        style="@style/btn_red"
-        android:text="发送广播" />
-
-    <Button
-        android:id="@+id/button5"
-        style="@style/btn_red"
-        android:text="点击启动服务和它的子线程" />
-
-    <Button
-        android:id="@+id/button6"
-        style="@style/btn_red"
-        android:text="进入模拟串口运行场景" />
 
 </LinearLayout>

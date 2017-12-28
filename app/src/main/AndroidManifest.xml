@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".GoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,25 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SecondActivity" />
-        <activity
-            android:name=".DialogActivity"
-            android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".KillappActivity" />
-        <activity android:name=".TextViewActivity" />
-        <activity android:name=".ReturnDataActivity" />
-        <activity android:name=".VideoActivity" />
-
-        <receiver android:name=".SysBootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".CounterService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity android:name=".ui.Main2Activity" />
         <activity android:name=".serial.SerialActivity" />
@@ -46,6 +28,10 @@
             android:name=".serial.SerialService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".counter.CounterService"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>
