@@ -30,14 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(MainActivity.this, WebviewActivity.class);
-                startActivity(intent);
-            }
-        }, 2000);
     }
 
     @Override
@@ -62,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MainActivity.this, WebviewActivity.class);
+                startActivity(intent);
+            }
+        }, 2000);
+
         super.onStart();
     }
 
