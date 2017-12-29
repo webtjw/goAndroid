@@ -1,24 +1,10 @@
 package com.webtjw.goandroid;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.webtjw.goandroid.common.UIInterface;
-import com.webtjw.goandroid.counter.CounterService;
 import com.webtjw.goandroid.html5.WebviewActivity;
 
 
