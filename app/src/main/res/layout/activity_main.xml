@@ -5,18 +5,12 @@
     android:layout_height="match_parent"
     tools:context="com.webtjw.goandroid.MainActivity"
     android:orientation="vertical"
-    android:background="#fff">
+    android:background="#fff"
+    android:gravity="center">
 
-    <Button
-        android:id="@+id/button1"
-        style="@style/btn_red"
-        android:text="Service + Thread 计数且基于 Application 类的 Toast" />
-
-    <Button
-        android:id="@+id/button2"
-        style="@style/btn_red"
-        android:text="点击打开 webview" />
-
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="欢迎使用。"/>
 
 </LinearLayout>
