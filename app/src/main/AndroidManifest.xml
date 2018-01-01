@@ -29,10 +29,6 @@
             android:name=".serial.SerialService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".counter.CounterService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity android:name=".html5.WebviewActivity"></activity>
     </application>
