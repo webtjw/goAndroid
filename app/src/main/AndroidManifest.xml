@@ -24,13 +24,17 @@
         </activity>
         <activity android:name=".ui.Main2Activity" />
         <activity android:name=".serial.SerialActivity" />
+        <activity android:name=".html5.WebviewActivity"></activity>
 
         <service
             android:name=".serial.SerialService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".html5.UpdateH5Service"
+            android:enabled="true"
+            android:exported="true" />
 
-        <activity android:name=".html5.WebviewActivity"></activity>
     </application>
 
 </manifest>

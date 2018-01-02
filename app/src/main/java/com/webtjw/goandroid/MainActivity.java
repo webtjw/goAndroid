@@ -1,16 +1,23 @@
 package com.webtjw.goandroid;
 
 import android.app.DownloadManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.webtjw.goandroid.html5.CheckUpdateThread;
+import com.webtjw.goandroid.html5.UpdateH5Service;
 import com.webtjw.goandroid.html5.WebviewActivity;
 
 import org.json.JSONObject;
@@ -39,45 +46,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        checkH5Update();
-        try {
-            CheckUpdateThread checkH5Thread = new CheckUpdateThread();
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        }
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.191.2:3000/").build();
-        H5Service h5Service = retrofit.create(H5Service.class);
-
-        Call<ResponseBody> call2GetVersion = h5Service.getVersion();
-
-        call2GetVersion.enqueue(new Callback<ResponseBody>() {
+        Intent intent = new Intent(MainActivity.this, UpdateH5Service.class);
+        ServiceConnection serviceConnection = new ServiceConnection() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    Gson gson = new Gson();
-                    VersionObject versionObject = gson.fromJson(response.body().string(), VersionObject.class);
-                    Toast.makeText(GoApplication.getContext(), versionObject.name + '-' + versionObject.version, Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {}
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                UpdateH5Service updateH5Service = ((UpdateH5Service.UpdateBinder)iBinder).h5Service;
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(GoApplication.getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onServiceDisconnected(ComponentName componentName) {}
+        };
+
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        TextView text = findViewById(R.id.main_text);
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, WebviewActivity.class);
+                startActivity(intent);
             }
         });
-
-        // Log.i(TAG, myVersion);
-    }
-
-    public interface H5Service {
-        @GET("h5.json")
-        Call<ResponseBody> getVersion();
-    }
-
-    public class VersionObject {
-        public String name;
-        public String version;
     }
 
     @Override
@@ -116,25 +105,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-    }
-
-    private void checkH5Update() {
-
-    }
-
-    public static void download(String urlPath) throws Exception {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] data = new byte[1024];
-        int len = 0;
-        URL url = new URL(urlPath);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        InputStream inputStream = conn.getInputStream();
-
-        while ((len = inputStream.read(data)) != -1) {
-            byteArrayOutputStream.write(data, 0, len);
-        }
-        inputStream.close();
-        Log.e(TAG, new String(byteArrayOutputStream.toByteArray()));
     }
 
     // JNI
