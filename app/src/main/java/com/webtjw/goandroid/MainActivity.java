@@ -24,6 +24,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -67,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        File file = new File("file:///android_asset/");
+        File[] files = file.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                Log.i("路径：",files[i].getAbsolutePath());
+            }
+        }
     }
 
     @Override

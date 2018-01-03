@@ -34,6 +34,6 @@ public class WebviewActivity extends AppCompatActivity {
         });
         Log.i(TAG, TAG);
 
-        webView.loadUrl("http://www.baidu.com/");
+        webView.loadUrl("file:///android_asset/404.html");
     }
 }

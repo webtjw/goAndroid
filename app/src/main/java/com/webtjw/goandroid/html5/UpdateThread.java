@@ -31,9 +31,23 @@ public class UpdateThread extends Thread implements Runnable {
                 try {
                     Gson gson = new Gson();
                     UpdateH5Service.ObjectDefine.VersionObj versionObj = gson.fromJson(response.body().string(), UpdateH5Service.ObjectDefine.VersionObj.class);
-                    Toast.makeText(GoApplication.getContext(), versionObj.name + '-' + versionObj.version, Toast.LENGTH_SHORT).show();
 
+                    Call<ResponseBody> callGetPackage = updateH5Service.h5Connection.getPackage();
+                    callGetPackage.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            try {
+                                Log.i(TAG, response.body().string());
+                            } catch (IOException e) {}
 
+                            updateH5Service.writeResponseBodyToDisk(response.body());
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Log.i(TAG, t.getMessage());
+                        }
+                    });
                 } catch (IOException e) {}
             }
 
