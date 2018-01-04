@@ -1,14 +1,18 @@
 package com.webtjw.goandroid.html5;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.webtjw.goandroid.GoApplication;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,54 +72,27 @@ public class UpdateH5Service extends Service {
         h5Connection = retrofit.create(H5Connection.class);
     }
 
-    public boolean writeResponseBodyToDisk(ResponseBody body) {
+    public static boolean copyH5AssetsToData() {
+        Context context = GoApplication.getContext();
+        AssetManager assetManager = context.getAssets();
+        String dataPath = context.getFilesDir().getAbsolutePath();
+
         try {
-            File myFile = new File(getAssets() + File.separator + "h5.zip");
+            InputStream h5Package = assetManager.open("h5/h5.zip");
 
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
+            File h5Folder = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "html5");
+            h5Folder.mkdir();
+            File txt = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/html5", "1.txt");
+            txt.createNewFile();
 
-            try {
-                byte[] fileReader = new byte[4096];
 
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
+            String[] dododo = new File(Environment.getExternalStorageDirectory().getAbsolutePath()).list();
 
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(myFile);
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-
-                    if (read == -1) {
-                        break;
-                    }
-
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-
-                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-
-                outputStream.flush();
-
-                return true;
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-                return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
+            for (String item: dododo) {
+                Log.i("kawi", item);
             }
-        } catch (IOException e) {
-            Log.e(TAG, "11111");
-            return false;
-        }
+        } catch (IOException e) {}
+
+        return false;
     }
 }

@@ -24,6 +24,8 @@ public class UpdateThread extends Thread implements Runnable {
     public void run() {
         super.run();
 
+        UpdateH5Service.copyH5AssetsToData();
+
         Call<ResponseBody> callGetVersion = updateH5Service.h5Connection.getVersion();
         callGetVersion.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -39,8 +41,6 @@ public class UpdateThread extends Thread implements Runnable {
                             try {
                                 Log.i(TAG, response.body().string());
                             } catch (IOException e) {}
-
-                            updateH5Service.writeResponseBodyToDisk(response.body());
                         }
 
                         @Override
@@ -56,5 +56,7 @@ public class UpdateThread extends Thread implements Runnable {
                 Log.e(TAG, t.getMessage());
             }
         });
+
+
     }
 }
