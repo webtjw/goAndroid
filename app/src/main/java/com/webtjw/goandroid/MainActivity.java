@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
     }
 
-    // 从 asset 中复制 H5 资源到 data 里面
+    // 从 assets 中复制 H5 资源到 data 里面
     private void copyHTML5FromAsset() {
         if (!Utils.haveHTMLInData()) {
             // 开子线程执行耗时操作
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                         // 新创建一个存放 h5 资源的文件夹
                         if (new File(PathName.HTML5_FOLDER_PATH).exists()) Utils.removeAll(PathName.HTML5_FOLDER_PATH);
                         new File(PathName.HTML5_FOLDER_PATH).mkdir();
-                        // 把 asset 中的压缩包复制到 data 中
+                        // 把 assets 中的压缩包复制到 data 中
                         File copyPackage = new File(PathName.HTML5_PACKAGE_PATH);
                         copyPackage.createNewFile();
 
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(TAG, "压缩失败，错误原因是：" + e.getMessage());
                         }
                     } catch (IOException e) {
-                        Log.e(TAG, "asset 中读取 H5 资源包失败，请确认 app 打包时 asset 目录下存在：" + PathName.HTML5_PACKAGE_NAME);
+                        Log.e(TAG, "assets 中读取 H5 资源包失败，请确认 app 打包时 assets 目录下存在：" + PathName.HTML5_PACKAGE_NAME);
                     }
                 }
             }).start();
