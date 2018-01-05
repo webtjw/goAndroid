@@ -1,23 +1,10 @@
 package com.webtjw.goandroid.html5;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Binder;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
-
-import com.webtjw.goandroid.GoApplication;
-import com.webtjw.goandroid.utils.Utils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -74,42 +61,6 @@ public class UpdateH5Service extends Service {
     }
 
     public static boolean copyH5AssetsToData() {
-        Context context = GoApplication.getContext();
-        AssetManager assetManager = context.getAssets();
-        String dataPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        // String dataPath = context.getFilesDir().getAbsolutePath();
-        String h5DataPath = dataPath + File.separator + "html5";
-
-        try {
-            InputStream inputStream = assetManager.open("h5/h5.zip");
-
-            // 判断 data 文件夹中 html5 文件夹是否存在
-            if (new File(h5DataPath).exists()) {
-                // 删除文件夹
-                Utils.removeAll(h5DataPath);
-            } else {
-                new File(h5DataPath).mkdir();
-            }
-
-            File copyHtml5Zip = new File(h5DataPath + File.separator + "html5.zip");
-            copyHtml5Zip.createNewFile();
-            FileOutputStream copyHtml5ZipStream = new FileOutputStream(copyHtml5Zip);
-            byte[] buf = new byte[1024];
-            int readSize = 0;
-
-            while (readSize != -1) {
-                copyHtml5ZipStream.write(buf, 0, readSize);
-                readSize = inputStream.read(buf);
-            }
-
-            inputStream.close();
-            copyHtml5ZipStream.flush();
-            copyHtml5ZipStream.close();
-
-
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-        }
 
         return false;
     }
