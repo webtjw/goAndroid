@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.webtjw.goandroid.constant.PathName;
 import com.webtjw.goandroid.html5.WebviewActivity;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.alpha);
+        findViewById(R.id.main_text).startAnimation(animation);
         copyHTML5FromAsset();
     }
 
