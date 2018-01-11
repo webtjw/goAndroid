@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.alpha);
         findViewById(R.id.main_text).startAnimation(animation);
+
         copyHTML5FromAsset();
     }
 
