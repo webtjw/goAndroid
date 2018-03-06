@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
 
 import com.webtjw.goandroid.constant.PathName;
 import com.webtjw.goandroid.html5.WebviewActivity;
