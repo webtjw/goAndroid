@@ -3,9 +3,6 @@ package com.webtjw.goandroid;
 import android.app.Application;
 import android.content.Context;
 
-/**
- * Created by webtj on 2017/12/28.
- */
 
 public class GoApplication extends Application {
 
@@ -13,8 +10,8 @@ public class GoApplication extends Application {
 
     @Override
     public void onCreate() {
-        context = getApplicationContext();
         super.onCreate();
+        context = getApplicationContext();
     }
 
     public static Context getContext() {

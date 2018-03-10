@@ -1,82 +1,45 @@
 package com.webtjw.goandroid;
 
-import android.app.DownloadManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
+import android.content.res.AssetManager;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
 
-import com.google.gson.Gson;
-import com.webtjw.goandroid.html5.CheckUpdateThread;
-import com.webtjw.goandroid.html5.UpdateH5Service;
+import com.webtjw.goandroid.constant.PathName;
 import com.webtjw.goandroid.html5.WebviewActivity;
+import com.webtjw.goandroid.utils.Utils;
 
-import org.json.JSONObject;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
+import java.nio.file.Path;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    static final String TAG = "MainActivity";
+    static final String TAG = "Manuel - MainActivity";
+
+    private ServiceConnection html5ServiceConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(MainActivity.this, UpdateH5Service.class);
-        ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                UpdateH5Service updateH5Service = ((UpdateH5Service.UpdateBinder)iBinder).h5Service;
-            }
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.alpha);
+        findViewById(R.id.main_text).startAnimation(animation);
 
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {}
-        };
-
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-        TextView text = findViewById(R.id.main_text);
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, WebviewActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        File file = new File("file:///android_asset/");
-        File[] files = file.listFiles();
-        if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                Log.i("路径：",files[i].getAbsolutePath());
-            }
-        }
+        copyHTML5FromAsset();
     }
 
     @Override
@@ -115,6 +78,54 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+    }
+
+    // 从 assets 中复制 H5 资源到 data 里面
+    private void copyHTML5FromAsset() {
+        if (!Utils.haveHTMLInData()) {
+            // 开子线程执行耗时操作
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        InputStream inputStream = getAssets().open(PathName.HTML5_PACKAGE_NAME);
+
+                        // 新创建一个存放 h5 资源的文件夹
+                        if (new File(PathName.HTML5_FOLDER_PATH).exists()) Utils.removeAll(PathName.HTML5_FOLDER_PATH);
+                        new File(PathName.HTML5_FOLDER_PATH).mkdir();
+                        // 把 assets 中的压缩包复制到 data 中
+                        File copyPackage = new File(PathName.HTML5_PACKAGE_PATH);
+                        copyPackage.createNewFile();
+
+                        FileOutputStream copyPackageStream = new FileOutputStream(copyPackage);
+                        byte[] buf = new byte[1024];
+                        int readSize = 0;
+
+                        while (readSize != -1) {
+                            copyPackageStream.write(buf, 0, readSize);
+                            readSize = inputStream.read(buf);
+                        }
+
+                        inputStream.close();
+                        copyPackageStream.flush();
+                        copyPackageStream.close(); // 复制完成
+
+                        try {
+                            ZipFile zipFile = new ZipFile(PathName.HTML5_PACKAGE_PATH);
+                            // 验证.zip文件是否合法，包括文件是否存在、是否为zip文件、是否被损坏等
+                            if (!zipFile.isValidZipFile()) Log.e(TAG, "压缩文件不合法，可能被损坏");
+
+                            zipFile.extractAll(PathName.HTML5_FOLDER_PATH); // 执行解压
+                            Utils.confirmFirstOpenFlag();
+                        } catch (ZipException e) {
+                            Log.e(TAG, "压缩失败，错误原因是：" + e.getMessage());
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "assets 中读取 H5 资源包失败，请确认 app 打包时 assets 目录下存在：" + PathName.HTML5_PACKAGE_NAME);
+                    }
+                }
+            }).start();
+        }
     }
 
     // JNI
