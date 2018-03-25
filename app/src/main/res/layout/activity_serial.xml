@@ -22,7 +22,6 @@
         android:id="@+id/serial_data_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/btn_red"
         android:text="send"></Button>
 
 </LinearLayout>
