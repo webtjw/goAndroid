@@ -3,4 +3,8 @@
 
     <!--welcome-->
     <string name="welcome">欢迎使用。</string>
+
+    <!--uncaught-->
+    <string name="uncaught_explanation">Activity 的崩溃闪退一般是由于程序抛出错误引起的，因此平常写代码时要多考虑代码是否可能会报错的问题，并 catch 处理。尽管如此，对于我这样的新手来说，由于未能捕捉到错误而引起的APP 崩溃闪退还是会偶尔发生的。对此，可以通过类接口 Thread.UncaughtExceptionHandler 来重写程序对未被捕捉错误的处理（包括日志记录和无赖的重启 APP 等），并通过 Thread.setDefaultUncaughtExceptionHandler 覆盖默认的处理程序。 </string>
+    <string name="uncaught_buttonText">点击抛出错误</string>
 </resources>

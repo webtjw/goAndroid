@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.webtjw.goandroid.GoApplication;
 import com.webtjw.goandroid.R;
+import com.webtjw.goandroid.view.demo.UncaughtErrorActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +61,8 @@ public class IndexActivity extends AppCompatActivity {
         DemoItem demoItem1 = new DemoItem("捕捉未处理的错误", new DemoInterface() {
             @Override
             public void click() {
-                Log.i(TAG, "谭家威您好！");
+                Intent intent = new Intent(IndexActivity.this, UncaughtErrorActivity.class);
+                startActivity(intent);
             }
         });
         demoList.add(demoItem1);
