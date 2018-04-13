@@ -28,12 +28,8 @@
         <activity android:name=".view.IndexActivity" />
         <activity android:name=".view.demo.UncaughtErrorActivity" />
 
-        <service
-            android:name=".serial.SerialService"
-            android:enabled="true" />
-        <service
-            android:name=".html5.UpdateH5Service"
-            android:enabled="true" />
+        <service android:name=".serial.SerialService" android:enabled="true" />
+        <service android:name=".html5.UpdateH5Service" android:enabled="true" />
     </application>
 
 </manifest>

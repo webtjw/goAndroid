@@ -2,6 +2,9 @@ package com.webtjw.goandroid.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
 import static com.webtjw.goandroid.constant.Names.FITSR_OPEN_SP_KEY;
 import static com.webtjw.goandroid.constant.Names.FITSR_OPEN_SP_NAME;
@@ -9,12 +12,11 @@ import static com.webtjw.goandroid.constant.Names.FITSR_OPEN_SP_NAME;
 import com.webtjw.goandroid.GoApplication;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 
-/**
- * Created by webtjw on 2017/12/2.
- * Utils 通用工具类
- */
 
 public class Utils {
     // 删除文件夹以及文件夹下的所有东西
@@ -47,5 +49,42 @@ public class Utils {
         SharedPreferences sharedPreferences = GoApplication.getContext().getSharedPreferences(FITSR_OPEN_SP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(FITSR_OPEN_SP_KEY, true);
+    }
+
+    // 获取格式化的时间
+    public static String getFormatTime () {
+        Calendar now = Calendar.getInstance();
+
+        int year = now.get(Calendar.YEAR);
+        int month = now.get(Calendar.MONTH) + 1;
+        int day = now.get(Calendar.DAY_OF_MONTH);
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+        int second = now.get(Calendar.SECOND);
+
+        return year + "-" + (month < 10 ? "0" : "") + month + "-" + (day < 10 ? "0" : "") + day + " " +  (hour < 10 ? "0" : "") + hour + ":" +  (minute < 10 ? "0" : "") + minute + ":" +  (second < 10 ? "0" : "") + second;
+    }
+
+    // 往某个文件输入内容
+    public static boolean saveStringToFile (String filePath, String content) {
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                File dir = new File(file.getParent());
+                if (!dir.exists()) dir.mkdirs();
+            }
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+                fileOutputStream.write(content.getBytes());
+                fileOutputStream.close();
+
+                return true;
+            } catch (IOException e) {
+                Log.e("Utils saveStringToFile", e.getMessage());
+            }
+        }
+
+        Toast.makeText(GoApplication.getContext(), "无法读写SD卡", Toast.LENGTH_LONG).show();
+        return false;
     }
 }

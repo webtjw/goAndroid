@@ -4,13 +4,17 @@ package com.webtjw.goandroid.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.os.Process;
 import android.util.Log;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.internal.Util;
 
 public class UncaughtHandler implements Thread.UncaughtExceptionHandler {
 
@@ -42,7 +46,9 @@ public class UncaughtHandler implements Thread.UncaughtExceptionHandler {
     }
 
     private boolean handleException (Throwable exception) {
-        String logString = "===========>>>>>>>>>>>> information about device and App:\n";
+        String timeString = Utils.getFormatTime();
+        String logString = timeString + "\n===========>>>>>>>>>>>> information about device and App:\n";
+
         HashMap<String, String> deviceInfosMap = collectDeviceInfos(context);
         for (Map.Entry<String, String> entry : deviceInfosMap.entrySet()) {
             logString += entry.getKey() + " = " + entry.getValue() + "\n";
@@ -54,7 +60,7 @@ public class UncaughtHandler implements Thread.UncaughtExceptionHandler {
         String errorMessage = stringWriter.toString();
         logString += "===========>>>>>>>>>>>> exception cause information:\n" + errorMessage;
 
-        Log.e(TAG, logString);
+        Utils.saveStringToFile(Environment.getExternalStorageDirectory() + "/tanjiawei/crash/" + timeString, logString);
         return false;
     }
 
