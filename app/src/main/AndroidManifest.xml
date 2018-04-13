@@ -24,7 +24,8 @@
         </activity>
         <activity android:name=".view.IndexActivity" />
         <activity android:name=".view.demo.UncaughtErrorActivity" />
-        <activity android:name=".view.demo.DialogActivity" />
+        <activity android:name=".view.demo.DialogActivity" android:theme="@style/bg_transparent" />
+        <activity android:name=".view.demo.DialogExamActivity" />
 
         <service
             android:name=".serial.SerialService"
@@ -34,5 +35,4 @@
             android:enabled="true" />
 
     </application>
-
 </manifest>
