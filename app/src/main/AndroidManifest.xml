@@ -22,14 +22,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".serial.SerialActivity" />
-        <activity android:name=".html5.WebviewActivity" />
         <activity android:name=".view.IndexActivity" />
         <activity android:name=".view.demo.UncaughtErrorActivity" />
+        <activity android:name=".view.demo.DialogActivity" />
 
-        <service android:name=".serial.SerialService" android:enabled="true" />
-        <service android:name=".html5.UpdateH5Service" android:enabled="true" />
+        <service
+            android:name=".serial.SerialService"
+            android:enabled="true" />
+        <service
+            android:name=".html5.UpdateH5Service"
+            android:enabled="true" />
+
     </application>
 
 </manifest>
