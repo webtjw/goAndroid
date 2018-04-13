@@ -1,5 +1,7 @@
 package com.webtjw.goandroid.view.demo;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,5 +31,9 @@ public class UncaughtErrorActivity extends AppCompatActivity {
                 arrayList.get(100);
             }
         });
+    }
+
+    public static void start (Context context) {
+        context.startActivity(new Intent(context, UncaughtErrorActivity.class));
     }
 }

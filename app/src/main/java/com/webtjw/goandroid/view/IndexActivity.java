@@ -59,14 +59,14 @@ public class IndexActivity extends AppCompatActivity {
     }
 
     private void fillDemoItems () {
+        final Context ctx = this;
         demoListBox = (LinearLayout) findViewById(R.id.index_demo_list);
 
         // 捕捉未处理的错误，用于处理程序意外崩溃闪退的日志记录和 APP 重启
         DemoItem demoItem1 = new DemoItem("捕捉未处理的错误", new DemoInterface() {
             @Override
             public void click() {
-                Intent intent = new Intent(IndexActivity.this, UncaughtErrorActivity.class);
-                startActivity(intent);
+                UncaughtErrorActivity.start(ctx);
             }
         });
         demoList.add(demoItem1);
