@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.webtjw.goandroid.GoApplication;
 import com.webtjw.goandroid.R;
+import com.webtjw.goandroid.view.demo.DialogExamActivity;
 import com.webtjw.goandroid.view.demo.UncaughtErrorActivity;
 
 import java.io.File;
@@ -37,6 +38,8 @@ public class IndexActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index);
         fillDemoItems(); // 填充各个功能的按钮
+
+        DialogExamActivity.start(this);
     }
 
     public static void start(Context context) {
